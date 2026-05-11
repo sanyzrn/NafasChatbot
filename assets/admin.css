@@ -1,0 +1,183 @@
+/* Nafas Chatbot Pro — Admin Styles */
+
+.ncp-admin { max-width: 1100px; }
+
+.ncp-admin-header {
+  background: linear-gradient(135deg, #b01618, #8c0f11);
+  color: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+}
+.ncp-admin-header h1 { color: #fff; font-size: 1.5rem; margin: 0 0 .35rem; }
+.ncp-version { font-size: .75rem; background: rgba(255,255,255,.2); padding: .2rem .5rem; border-radius: 999px; vertical-align: middle; font-weight: 400; }
+.ncp-tagline { margin: 0; opacity: .85; font-size: .9rem; }
+
+.ncp-admin-body { margin-bottom: 2rem; }
+
+/* Tabs */
+.ncp-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.ncp-tab {
+  padding: .5rem 1rem;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: .85rem;
+  font-weight: 600;
+  color: #444;
+  transition: all .15s;
+}
+.ncp-tab:hover  { background: #e0e0e0; }
+.ncp-tab.active { background: #b01618; color: #fff; border-color: #b01618; }
+
+/* Tab content */
+.ncp-tab-content { display: none; }
+.ncp-tab-content.active { display: block; }
+
+/* Cards */
+.ncp-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.ncp-card h2 { margin: 0 0 1rem; font-size: 1rem; border-bottom: 1px solid #eee; padding-bottom: .6rem; }
+.ncp-card h3 { margin: 1rem 0 .75rem; font-size: .9rem; color: #555; }
+.ncp-card-info { background: #f9f9fb; }
+
+/* Metrics */
+.ncp-admin-metrics { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem 1.5rem; }
+.ncp-admin-metrics h2 { margin-top: 0; font-size: 1rem; border-bottom: 1px solid #eee; padding-bottom: .6rem; }
+.ncp-metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .75rem; margin-bottom: 1rem; }
+.ncp-metric-card { background: #f7f7f8; border: 1px solid #e8e8ec; border-radius: 10px; padding: 1rem; text-align: center; display: flex; flex-direction: column; gap: .25rem; align-items: center; }
+.ncp-metric-icon  { font-size: 1.4rem; }
+.ncp-metric-value { font-size: 1.5rem; font-weight: 800; color: #b01618; }
+.ncp-metric-label { font-size: .78rem; color: #666; }
+
+/* Form table adjustments */
+.ncp-card .form-table th { width: 200px; }
+.ncp-settings-form .submit { margin-top: 1.5rem; }
+
+/* ── Theme Presets ────────────────────────────────────────── */
+.ncp-presets-card { background: linear-gradient(135deg, #fafaf9 0%, #f3f0eb 100%); }
+
+.ncp-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ncp-preset-card {
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  transition: border-color .2s, box-shadow .2s;
+  cursor: default;
+}
+.ncp-preset-card:hover { border-color: #b01618; box-shadow: 0 4px 16px rgba(176,22,24,.12); }
+.ncp-preset-card.ncp-preset-active { border-color: #b01618; box-shadow: 0 0 0 3px rgba(176,22,24,.18); }
+
+.ncp-preset-swatches { display: flex; gap: 4px; }
+.ncp-swatch { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(0,0,0,.1); display: inline-block; }
+
+.ncp-preset-icon  { font-size: 1.6rem; line-height: 1; }
+.ncp-preset-name  { font-weight: 700; font-size: .95rem; color: #1c1a18; }
+.ncp-preset-desc  { font-size: .78rem; color: #6a625a; line-height: 1.4; flex: 1; }
+
+.ncp-apply-preset {
+  margin-top: .25rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.ncp-preset-notice {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .75rem 1rem;
+  background: #eafaf0;
+  border: 1px solid #aed6b8;
+  border-radius: 8px;
+  font-size: .875rem;
+  color: #155724;
+}
+.ncp-preset-notice .dashicons { color: #28a745; font-size: 1.1rem; width: auto; height: auto; }
+.ncp-preset-save-hint { color: #5a6268; font-size: .8rem; }
+
+/* ── Color tokens header ──────────────────────────────────── */
+.ncp-colors-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+.ncp-colors-header h2 { margin: 0; border: none; padding: 0; }
+
+/* ── Live Preview ─────────────────────────────────────────── */
+.ncp-live-preview { margin-top: 1.5rem; }
+.ncp-preview-label { font-weight: 600; color: #444; margin-bottom: .5rem; font-size: .85rem; }
+
+.ncp-preview-panel {
+  width: 320px;
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  overflow: hidden;
+  font-size: .875rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  transition: all .2s;
+}
+
+.ncp-preview-header {
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 600;
+  font-size: .9rem;
+}
+.ncp-preview-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.7);
+  margin-left: auto;
+}
+.ncp-preview-online { font-size: .75rem; opacity: .85; }
+
+.ncp-preview-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  min-height: 120px;
+}
+
+.ncp-preview-msg {
+  padding: .5rem .75rem;
+  border-radius: 12px;
+  max-width: 85%;
+  font-size: .82rem;
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+.ncp-preview-bot  { align-self: flex-start; }
+.ncp-preview-user { align-self: flex-end; }
+
+.ncp-preview-footer {
+  padding: .6rem .75rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  border-top: 1px solid transparent;
+}
+.ncp-preview-input-area { flex: 1; font-size: .8rem; }
+.ncp-preview-send {
+  border: none;
+  border-radius: 8px;
+  padding: .4rem .65rem;
+  cursor: default;
+  font-size: .85rem;
+}
+

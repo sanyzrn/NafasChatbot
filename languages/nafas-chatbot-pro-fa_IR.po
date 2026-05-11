@@ -1,0 +1,320 @@
+# Persian (Iran) translation for Nafas Chatbot Pro
+# Copyright (C) Nafas Team
+msgid ""
+msgstr ""
+"Project-Id-Version: Nafas Chatbot Pro 2.0.0\n"
+"PO-Revision-Date: 2026-02-25\n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Settings"
+msgstr "تنظیمات"
+
+msgid "Chat Log"
+msgstr "گزارش چت"
+
+msgid "AI Settings"
+msgstr "هوش مصنوعی"
+
+msgid "Content"
+msgstr "محتوا"
+
+msgid "Features"
+msgstr "قابلیت‌ها"
+
+msgid "Appearance"
+msgstr "ظاهر"
+
+msgid "Notifications"
+msgstr "اعلان‌ها"
+
+msgid "Advanced"
+msgstr "پیشرفته"
+
+msgid "AI Configuration"
+msgstr "تنظیمات هوش مصنوعی"
+
+msgid "Default Provider"
+msgstr "سرویس‌دهنده پیش‌فرض"
+
+msgid "Iran"
+msgstr "ایران"
+
+msgid "Custom Endpoint"
+msgstr "Endpoint سفارشی"
+
+msgid "API Keys"
+msgstr "کلیدهای API"
+
+msgid "Get yours at %s"
+msgstr "از %s دریافت کنید"
+
+msgid "Custom API Key"
+msgstr "کلید API سفارشی"
+
+msgid "System Prompt"
+msgstr "دستورالعمل سیستم"
+
+msgid "General instructions for the AI assistant."
+msgstr "دستورالعمل‌های کلی برای دستیار هوش مصنوعی"
+
+msgid "Fallback reply (no API)"
+msgstr "پاسخ پیش‌فرض (بدون API)"
+
+msgid "Shown when no API is configured. Use {product} as a placeholder."
+msgstr "هنگامی که API تنظیم نشده باشد نمایش داده می‌شود. می‌توانید از {product} استفاده کنید."
+
+msgid "Rate Limiting"
+msgstr "محدودیت نرخ"
+
+msgid "Requests per minute (per IP)"
+msgstr "درخواست در دقیقه (هر IP)"
+
+msgid "Requests per hour (per IP)"
+msgstr "درخواست در ساعت (هر IP)"
+
+msgid "Cache duration (minutes)"
+msgstr "مدت Cache (دقیقه)"
+
+msgid "Company Information"
+msgstr "اطلاعات شرکت"
+
+msgid "Company name"
+msgstr "نام شرکت"
+
+msgid "Company ID"
+msgstr "شناسه شرکت"
+
+msgid "Products"
+msgstr "محصولات"
+
+msgid "Product list (JSON)"
+msgstr "لیست محصولات (JSON)"
+
+msgid "Format:"
+msgstr "فرمت:"
+
+msgid "Default Features"
+msgstr "قابلیت‌های پیش‌فرض"
+
+msgid "Show launcher button"
+msgstr "نمایش دکمه باز‌کننده"
+
+msgid "Company questions menu"
+msgstr "منوی سوال درباره شرکت"
+
+msgid "Product questions menu"
+msgstr "منوی سوال درباره محصولات"
+
+msgid "Adverse drug reaction menu"
+msgstr "منوی ثبت عوارض دارویی"
+
+msgid "Consultation request menu"
+msgstr "منوی درخواست مشاوره"
+
+msgid "Enable"
+msgstr "فعال"
+
+msgid "Chat logging"
+msgstr "ثبت لاگ چت"
+
+msgid "Enable (for analytics and quality improvement)"
+msgstr "فعال (برای آنالیز و بهبود کیفیت)"
+
+msgid "Theme Presets"
+msgstr "پیش‌تنظیمات ظاهری"
+
+msgid "One-click signature design packs. Instantly populates all color tokens below — then save to persist."
+msgstr "بسته‌های طراحی با یک کلیک. فوراً تمام رنگ‌ها را پر می‌کند — سپس ذخیره کنید."
+
+msgid "Apply Preset"
+msgstr "اعمال پیش‌تنظیم"
+
+msgid "— click Save Settings below to persist."
+msgstr "— برای ذخیره، روی «ذخیره تنظیمات» کلیک کنید."
+
+msgid "Clinical Minimal"
+msgstr "مینیمال بالینی"
+
+msgid "Clean whites & precise typography. Professional medical tone."
+msgstr "سفید خالص و تایپوگرافی دقیق. لحن حرفه‌ای پزشکی."
+
+msgid "Premium Glass"
+msgstr "شیشه‌ای پریمیوم"
+
+msgid "Dark glass morphism with luminous accents. Premium feel."
+msgstr "گلس مورفیسم تیره با تاکیدهای درخشان. حس لوکس."
+
+msgid "Editorial Bold"
+msgstr "ادیتوریال جسورانه"
+
+msgid "High-contrast editorial style with strong typographic hierarchy."
+msgstr "سبک ادیتوریال با کنتراست بالا و سلسله‌مراتب تایپوگرافیک قوی."
+
+msgid "Dimensions & Font"
+msgstr "ابعاد و فونت"
+
+msgid "Panel width"
+msgstr "عرض پنل"
+
+msgid "Panel height"
+msgstr "ارتفاع پنل"
+
+msgid "Launcher position"
+msgstr "موقعیت دکمه"
+
+msgid "Right"
+msgstr "راست"
+
+msgid "Left"
+msgstr "چپ"
+
+msgid "Font family"
+msgstr "فونت"
+
+msgid "Font sizes"
+msgstr "اندازه‌های فونت"
+
+msgid "Heading:"
+msgstr "عنوان:"
+
+msgid "Body:"
+msgstr "متن:"
+
+msgid "Caption:"
+msgstr "کپشن:"
+
+msgid "Color Tokens"
+msgstr "توکن‌های رنگی"
+
+msgid "👁 Live Preview"
+msgstr "👁 پیش‌نمایش زنده"
+
+msgid "Primary color"
+msgstr "رنگ اصلی"
+
+msgid "Primary hover"
+msgstr "رنگ اصلی Hover"
+
+msgid "Base background"
+msgstr "پس‌زمینه اصلی"
+
+msgid "Card background"
+msgstr "پس‌زمینه کارت"
+
+msgid "Border color"
+msgstr "رنگ حاشیه"
+
+msgid "Base text color"
+msgstr "رنگ متن اصلی"
+
+msgid "Muted text color"
+msgstr "رنگ متن کم‌رنگ"
+
+msgid "Control background"
+msgstr "پس‌زمینه کنترل"
+
+msgid "Control hover"
+msgstr "کنترل Hover"
+
+msgid "Control text"
+msgstr "متن کنترل"
+
+msgid "AI Assistant"
+msgstr "دستیار هوشمند"
+
+msgid "Online"
+msgstr "آنلاین"
+
+msgid "Hello! How can I help you today?"
+msgstr "سلام! چطور می‌توانم کمکتان کنم؟"
+
+msgid "Tell me about your products."
+msgstr "درباره محصولاتتان بگویید."
+
+msgid "Of course! We have several pharmaceutical products available..."
+msgstr "البته! ما چندین محصول دارویی داریم..."
+
+msgid "Type your message…"
+msgstr "پیام خود را بنویسید..."
+
+msgid "Bale Notifications"
+msgstr "اعلان‌های بله (Bale)"
+
+msgid "Telegram Notifications"
+msgstr "اعلان‌های تلگرام"
+
+msgid "External APIs"
+msgstr "API خارجی"
+
+msgid "Connect to external systems by setting the following endpoints."
+msgstr "برای اتصال به سیستم‌های خارجی، می‌توانید آدرس‌های زیر را تنظیم کنید."
+
+msgid "If empty, the AI provider above is used directly."
+msgstr "اگر خالی باشد، از هوش مصنوعی مستقیم استفاده می‌شود."
+
+msgid "Shortcodes"
+msgstr "کدهای کوتاه"
+
+msgid "Simple usage:"
+msgstr "استفاده ساده:"
+
+msgid "With parameters:"
+msgstr "با پارامترها:"
+
+msgid "All Elementor Widget parameters are also supported in shortcodes."
+msgstr "تمام پارامترهای Elementor Widget در shortcode هم پشتیبانی می‌شوند."
+
+msgid "Parameters"
+msgstr "پارامترها"
+
+msgid "Parameter"
+msgstr "پارامتر"
+
+msgid "Example"
+msgstr "نمونه"
+
+msgid "Save Settings"
+msgstr "ذخیره تنظیمات"
+
+msgid "Statistics"
+msgstr "آمار"
+
+msgid "Total chats"
+msgstr "کل مکالمات"
+
+msgid "Today"
+msgstr "امروز"
+
+msgid "Cache hits"
+msgstr "Cache Hits"
+
+msgid "API success"
+msgstr "API موفق"
+
+msgid "API errors"
+msgstr "خطاهای API"
+
+msgid "View full log"
+msgstr "مشاهده گزارش کامل"
+
+msgid "Download CSV"
+msgstr "دانلود CSV"
+
+msgid "Download JSON"
+msgstr "دانلود JSON"
+
+msgid "Theme preset applied successfully!"
+msgstr "پیش‌تنظیم ظاهری با موفقیت اعمال شد!"
+
+msgid "Applying..."
+msgstr "در حال اعمال..."
+
+msgid "Live Preview"
+msgstr "پیش‌نمایش زنده"
+
+msgid "Theme preset applied."
+msgstr "پیش‌تنظیم اعمال شد."
