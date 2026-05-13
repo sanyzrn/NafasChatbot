@@ -29,8 +29,12 @@
   function md2html(raw) {
     let s = String(raw || '');
     // Escape HTML
-    s = s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    // Code blocks
+ s = s.replace(/&/g, '&amp;')
+         .replace(/</g, '&lt;')   // ✅  Correct — escape < as &lt;
+         .replace(/>/g, '&gt;')   // ✅  Also escape > as &gt; for completeness
+         .replace(/"/g, '&quot;');
+
+		 // Code blocks
     s = s.replace(/```([\s\S]*?)```/g, (_, c) => `<pre><code>${c.trim()}</code></pre>`);
     // Inline code
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -38,8 +42,11 @@
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
     // Links
-    s = s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-    // Lists
+// ✅  Complete regex: match a URL, wrap it in an anchor tag
+s = s.replace(
+    /(https?:\/\/[^\s<>"]+)/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+);    // Lists
     const lines = s.split('\n');
     const out = []; let inList = false;
     lines.forEach(line => {
@@ -1033,20 +1040,12 @@ if (mount && !cfg.floating_mode) {
     });
   }
 
-  // Run on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootNcp);
+} else {
+    bootNcp();
+}
 
-  // Also handle dynamically added instances (Elementor live preview)
-  if (window.ncpInstances && Array.isArray(window.ncpInstances)) {
-    window.ncpInstances.forEach(cfg => {
-      if (document.readyState !== 'loading') createInstance(cfg);
-      else document.addEventListener('DOMContentLoaded', () => createInstance(cfg));
-    });
-  }
 
   // Push API for future dynamic adds
 function parseMountConfig(mount) {

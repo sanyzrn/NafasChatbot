@@ -178,19 +178,20 @@ public function enqueue_frontend_assets( array $config ): void {
     wp_enqueue_script( 'ncp-chatbot' );
 
     if ( ! $this->assets_loaded ) {
-        // FIX 1: Encode and inject the global config (ajaxUrl, nonce, i18n)
-        $global      = [
+        $global = [
             'ajaxUrl' => admin_url( 'admin-ajax.php' ),
             'nonce'   => wp_create_nonce( NCP_NONCE ),
             'i18n'    => $this->default_i18n(),
         ];
+        // ✅  Encode $global (not the missing $json) and inject it
         $global_json = wp_json_encode( $global, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
         wp_add_inline_script(
             'ncp-chatbot',
-            "window.ncpGlobal = {$global_json};"
+            'window.ncpGlobal=' . $global_json . ';'
         );
         $this->assets_loaded = true;
     }
+}
 
     // FIX 2: Always push per-instance config so JS can boot the widget
     $json = wp_json_encode( $config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
@@ -306,12 +307,13 @@ public function render_mount( array $config ): string {
     if ( ! $json ) { $json = '{}'; }
 
     $is_floating = ! empty( $config['floating_mode'] );
-    $classes     = [
+    $classes = [
         'ncp-mount',
         $is_floating ? 'ncp-mount-floating' : 'ncp-mount-inline',
     ];
+    ];
 
-    // FIX: Provide the actual HTML format string with the two %s slots.
+    // ✅  Two %s specifiers — one for class, one for data-ncp-config
     return sprintf(
         '<div class="%s" data-ncp-config="%s"></div>',
         esc_attr( implode( ' ', $classes ) ),
@@ -386,11 +388,9 @@ public function render_mount( array $config ): string {
 			wp_send_json_error( [ 'message' => __( 'اتصال به سرویس هوش مصنوعی برقرار نشد.', 'nafas-chatbot-pro' ) ], 502 );
 		}
 
-	$code    = (int) wp_remote_retrieve_response_code( $response );
-$body    = wp_remote_retrieve_body( $response );
+$code = (int) wp_remote_retrieve_response_code( $response );
+$body = wp_remote_retrieve_body( $response );
 $decoded = json_decode( $body, true );
-
-// FIX: Use >= for comparison, not = for assignment.
 if ( $code >= 300 || ! is_array( $decoded ) ) {
     $this->metric_inc( 'ncp_metric_api_errors' );
     $err_msg = is_array( $decoded ) && isset( $decoded['error']['message'] )
@@ -398,6 +398,7 @@ if ( $code >= 300 || ! is_array( $decoded ) ) {
         : __( 'پاسخ نامعتبر از سرویس هوش مصنوعی.', 'nafas-chatbot-pro' );
     wp_send_json_error( [ 'message' => $err_msg ], 502 );
 }
+
 
 		$reply  = $this->extract_text( $decoded );
 		$tokens = (int) ( $decoded['usage']['total_tokens'] ?? 0 );
@@ -430,11 +431,8 @@ if ( $code >= 300 || ! is_array( $decoded ) ) {
 		// Validation
 		// FIX: Restore proper range comparisons for both fields.
 $name_len = mb_strlen( $name );
-if ( $name_len < 2 || $name_len > 80 ) {
-    wp_send_json_error(
-        [ 'message' => __( 'نام نامعتبر است. (۲ تا ۸۰ کاراکتر)', 'nafas-chatbot-pro' ) ],
-        400
-    );
+if ( mb_strlen( $name ) < 2 || mb_strlen( $name ) > 80 ) {
+    wp_send_json_error( [ 'message' => __( 'نام نامعتبر است.', 'nafas-chatbot-pro' ) ], 400 );
 }
 
 		if ( ! preg_match( '/^(\+98|0)?9\d{9}$/', $phone ) ) {
@@ -443,11 +441,8 @@ if ( $name_len < 2 || $name_len > 80 ) {
 
 
 $desc_len = mb_strlen( $description );
-if ( $desc_len < 5 || $desc_len > 2000 ) {
-    wp_send_json_error(
-        [ 'message' => __( 'توضیحات باید بین ۵ تا ۲۰۰۰ کاراکتر باشد.', 'nafas-chatbot-pro' ) ],
-        400
-    );
+if ( mb_strlen( $description ) < 5 || mb_strlen( $description ) > 2000 ) {
+    wp_send_json_error( [ 'message' => __( 'توضیحات باید بین ۵ تا ۲۰۰۰ کاراکتر باشد.', 'nafas-chatbot-pro' ) ], 400 );
 }
 
 		// Send Bale notification
@@ -519,8 +514,11 @@ if ( $desc_len < 5 || $desc_len > 2000 ) {
 
 		global $wpdb;
 	    $table = $wpdb->prefix . NCP_TABLE;
-		$wpdb->query( "TRUNCATE TABLE {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL
-		delete_option( 'ncp_metric_cache_hits' );
+// ✅  Entire table name is inside the double-quoted string (consistent with other queries)
+$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}" . NCP_TABLE );
+// Or cleaner — use the same pattern as everywhere else:
+$table = $wpdb->prefix . NCP_TABLE;
+$wpdb->query( "TRUNCATE TABLE {$table}" );		delete_option( 'ncp_metric_cache_hits' );
 		delete_option( 'ncp_metric_api_success' );
 		delete_option( 'ncp_metric_api_errors' );
 
