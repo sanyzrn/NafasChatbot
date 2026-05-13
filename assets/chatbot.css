@@ -4,10 +4,10 @@
 ──────────────────────────────────────────────────────────────────────── */
 
 /* ── Mount point ── */
-.ncp-mount {
-  display: block;
-  width: 100%;
-  max-width: 100%;
+.ncp-mount{
+  display:block;
+  width:100%;
+  position:relative;
 }
 
 .ncp-mount-floating {
@@ -240,13 +240,25 @@
   z-index: 1;
 }
 
-.ncp-root.ncp-inline .ncp-panel {
-  position: relative;
-  width: 100%;
-  height: min(var(--ncp-panel-h), 80vh);
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
+.ncp-root.ncp-inline{
+  width:100%;
+  max-width:var(--ncp-panel-w);
+  margin-inline:auto;
+}
+
+.ncp-root.ncp-inline .ncp-panel{
+  position:relative;
+  inset:auto;
+  width:100%;
+  max-width:100%;
+  height:min(var(--ncp-panel-h),80vh);
+
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+  visibility:visible;
+
+  margin:0 auto;
 }
 
 @media (max-width: 520px) {
@@ -823,4 +835,29 @@
   .ncp-root.ncp-inline .ncp-panel {
     height: min(var(--ncp-panel-h), 78vh);
   }
+}
+
+.ncp-root,
+.ncp-panel,
+.ncp-launcher{
+  z-index:999999 !important;
+}
+.elementor-widget-container,
+.elementor-column,
+.elementor-section{
+  overflow:visible !important;
+}
+
+
+@media(max-width:768px){
+
+  .ncp-root.ncp-floating .ncp-panel{
+    left:10px !important;
+    right:10px !important;
+    width:auto !important;
+    max-width:none !important;
+    bottom:80px !important;
+    height:75vh !important;
+  }
+
 }

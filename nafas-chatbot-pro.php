@@ -3,7 +3,7 @@
  * Plugin Name:       Nafas Chatbot Pro
  * Plugin URI:        https://dbsgraphic.ir
  * Description:       Enterprise-grade AI chatbot for WordPress & Elementor. Supports multi-provider AI (AvalAI, OpenAI, custom), RTL/LTR, dark mode, persistent history, rate limiting, Bale notifications, chat logging, and full shortcode + Elementor widget integration.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Saeed Zarrini
  * Author URI:        https://dbsgraphic.ir
  * License:           GPL-2.0-or-later
@@ -185,10 +185,9 @@ final class Nafas_Chatbot_Pro {
         ];
 
         wp_add_inline_script(
-            'ncp-chatbot',
-            'window.ncpGlobal=' . wp_json_encode( $global, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . ';',
-            'before'
-        );
+    'ncp-chatbot',
+    "window.ncpInstances=window.ncpInstances||[];window.ncpInstances.push({$json});"
+);
 
         $this->assets_loaded = true;
     }
