@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name:       Nafas Chatbot Pro
- * Plugin URI:        https://nafas.com/chatbot-pro
+ * Plugin URI:        https://dbsgraphic.ir
  * Description:       Enterprise-grade AI chatbot for WordPress & Elementor. Supports multi-provider AI (AvalAI, OpenAI, custom), RTL/LTR, dark mode, persistent history, rate limiting, Bale notifications, chat logging, and full shortcode + Elementor widget integration.
  * Version:           2.0.0
- * Author:            Nafas Team
- * Author URI:        https://nafas.com
+ * Author:            Saeed Zarrini
+ * Author URI:        https://dbsgraphic.ir
  * License:           GPL-2.0-or-later
  * Requires at least: 6.2
  * Requires PHP:      8.0
@@ -174,28 +174,30 @@ final class Nafas_Chatbot_Pro {
 	private bool $assets_loaded = false;
 
 	public function enqueue_frontend_assets( array $config ): void {
-		wp_enqueue_style( 'ncp-chatbot' );
-		wp_enqueue_script( 'ncp-chatbot' );
+    wp_enqueue_style( 'ncp-chatbot' );
+    wp_enqueue_script( 'ncp-chatbot' );
 
-		if ( ! $this->assets_loaded ) {
-			$global = [
-				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'nonce'      => wp_create_nonce( NCP_NONCE ),
-				'i18n'       => $this->default_i18n(),
-			];
-			wp_add_inline_script(
-				'ncp-chatbot',
-				'window.ncpGlobal=' . wp_json_encode( $global, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . ';',
-				'before'
-			);
-			$this->assets_loaded = true;
-		}
+    if ( ! $this->assets_loaded ) {
+        $global = [
+            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+            'nonce'   => wp_create_nonce( NCP_NONCE ),
+            'i18n'    => $this->default_i18n(),
+        ];
 
-		// Per-instance config injected via inline script after main script
-		$uid    = 'ncp_' . wp_generate_uuid4();
-		$json   = wp_json_encode( array_merge( $config, [ '_uid' => $uid ] ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
-		wp_add_inline_script( 'ncp-chatbot', "window.ncpInstances=window.ncpInstances||[];window.ncpInstances.push({$json});" );
-	}
+        wp_add_inline_script(
+            'ncp-chatbot',
+            'window.ncpGlobal=' . wp_json_encode( $global, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . ';',
+            'before'
+        );
+
+        $this->assets_loaded = true;
+    }
+
+    /*
+     * Config is now read directly from .ncp-mount[data-ncp-config].
+     * Do not push window.ncpInstances here, otherwise the widget may render twice.
+     */
+}
 
 	/* ── Shortcode ─────────────────────────────────────────── */
 
@@ -290,13 +292,26 @@ final class Nafas_Chatbot_Pro {
 
 	/* ── Render ────────────────────────────────────────────── */
 
-	public function render_mount( array $config ): string {
-		$json = wp_json_encode( $config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
-		if ( ! $json ) {
-			$json = '{}';
-		}
-		return '<div class="ncp-mount" data-ncp-config="' . esc_attr( $json ) . '" aria-live="polite"></div>';
-	}
+public function render_mount( array $config ): string {
+    $json = wp_json_encode( $config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+
+    if ( ! $json ) {
+        $json = '{}';
+    }
+
+    $is_floating = ! empty( $config['floating_mode'] );
+
+    $classes = [
+        'ncp-mount',
+        $is_floating ? 'ncp-mount-floating' : 'ncp-mount-inline',
+    ];
+
+    return sprintf(
+        '<div class="%1$s" data-ncp-config="%2$s" aria-live="polite"></div>',
+        esc_attr( implode( ' ', $classes ) ),
+        esc_attr( $json )
+    );
+}
 
 	/* ── AJAX: Chat ────────────────────────────────────────── */
 

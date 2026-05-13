@@ -121,9 +121,20 @@
     }
 
     /* ── Build DOM ── */
-    const root = el('div', buildRootClass());
-    applyCSSVars(root, cfg);
-    document.body.appendChild(root);
+const mount = cfg._mount || null;
+const root = el('div', buildRootClass());
+
+applyCSSVars(root, cfg);
+
+if (mount && !cfg.floating_mode) {
+  mount.innerHTML = '';
+  mount.appendChild(root);
+} else if (mount && cfg.floating_mode) {
+  mount.innerHTML = '';
+  document.body.appendChild(root);
+} else {
+  document.body.appendChild(root);
+}
 
     // Floating launcher
     let launcherEl = null, badgeEl = null;
@@ -1038,11 +1049,54 @@
   }
 
   // Push API for future dynamic adds
-  window.ncpInstances = window.ncpInstances || [];
-  const _origPush = Array.prototype.push.bind(window.ncpInstances);
-  window.ncpInstances.push = function(...args) {
-    args.forEach(cfg => createInstance(cfg));
-    return _origPush(...args);
-  };
+function parseMountConfig(mount) {
+  try {
+    const raw = mount.getAttribute('data-ncp-config') || '{}';
+    const cfg = JSON.parse(raw);
+    cfg._mount = mount;
+
+    if (!cfg._uid) {
+      cfg._uid = mount.getAttribute('data-ncp-uid') || uid();
+      mount.setAttribute('data-ncp-uid', cfg._uid);
+    }
+
+    return cfg;
+  } catch (e) {
+    console.error('[NCP] Invalid mount config:', e);
+    return null;
+  }
+}
+
+function bootNcp() {
+  const mounted = new WeakSet();
+
+  document.querySelectorAll('.ncp-mount[data-ncp-config]').forEach(mount => {
+    if (mounted.has(mount)) return;
+    if (mount.dataset.ncpBooted === '1') return;
+
+    const cfg = parseMountConfig(mount);
+    if (!cfg) return;
+
+    mount.dataset.ncpBooted = '1';
+    mounted.add(mount);
+
+    createInstance(cfg);
+  });
+
+  if (Array.isArray(window.ncpInstances)) {
+    window.ncpInstances.forEach(cfg => {
+      if (!cfg || cfg._booted) return;
+      cfg._booted = true;
+      createInstance(cfg);
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootNcp);
+} else {
+  bootNcp();
+}
+}
 
 })();
