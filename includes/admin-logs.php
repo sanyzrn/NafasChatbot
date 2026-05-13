@@ -70,13 +70,15 @@ function ncp_render_logs_page(): void {
 				<div class="tablenav bottom" style="margin-top:1rem">
 					<div class="tablenav-pages">
 						<?php
-						$base_url = admin_url( 'admin.php?page=ncp-dashboard-logs&paged=%#%' );
-						echo wp_kses_post( paginate_links( [
-							'base'    => $base_url,
-							'format'  => '',
-							'current' => $page,
-							'total'   => $pages,
-						] ) );
+// FIX: Reference the constant so the slug is always in sync with registration
+$logs_slug = NCP_MENU_SLUG . '-logs';
+$base_url  = admin_url( 'admin.php?page=' . rawurlencode( $logs_slug ) . '&paged=%#%' );
+echo wp_kses_post( paginate_links( [
+    'base'    => $base_url,
+    'format'  => '',
+    'current' => $page,
+    'total'   => $pages,
+] ) );
 						?>
 					</div>
 				</div>

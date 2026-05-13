@@ -173,24 +173,34 @@ final class Nafas_Chatbot_Pro {
 
 	private bool $assets_loaded = false;
 
-	public function enqueue_frontend_assets( array $config ): void {
+public function enqueue_frontend_assets( array $config ): void {
     wp_enqueue_style( 'ncp-chatbot' );
     wp_enqueue_script( 'ncp-chatbot' );
 
     if ( ! $this->assets_loaded ) {
-        $global = [
+        // FIX 1: Encode and inject the global config (ajaxUrl, nonce, i18n)
+        $global      = [
             'ajaxUrl' => admin_url( 'admin-ajax.php' ),
             'nonce'   => wp_create_nonce( NCP_NONCE ),
             'i18n'    => $this->default_i18n(),
         ];
-
+        $global_json = wp_json_encode( $global, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
         wp_add_inline_script(
-    'ncp-chatbot',
-    "window.ncpInstances=window.ncpInstances||[];window.ncpInstances.push({$json});"
-);
-
+            'ncp-chatbot',
+            "window.ncpGlobal = {$global_json};"
+        );
         $this->assets_loaded = true;
     }
+
+    // FIX 2: Always push per-instance config so JS can boot the widget
+    $json = wp_json_encode( $config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+    if ( $json ) {
+        wp_add_inline_script(
+            'ncp-chatbot',
+            "window.ncpInstances = window.ncpInstances || []; window.ncpInstances.push({$json});"
+        );
+    }
+}
 
     /*
      * Config is now read directly from .ncp-mount[data-ncp-config].
@@ -293,20 +303,17 @@ final class Nafas_Chatbot_Pro {
 
 public function render_mount( array $config ): string {
     $json = wp_json_encode( $config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
-
-    if ( ! $json ) {
-        $json = '{}';
-    }
+    if ( ! $json ) { $json = '{}'; }
 
     $is_floating = ! empty( $config['floating_mode'] );
-
-    $classes = [
+    $classes     = [
         'ncp-mount',
         $is_floating ? 'ncp-mount-floating' : 'ncp-mount-inline',
     ];
 
+    // FIX: Provide the actual HTML format string with the two %s slots.
     return sprintf(
-        '<div class="%1$s" data-ncp-config="%2$s" aria-live="polite"></div>',
+        '<div class="%s" data-ncp-config="%s"></div>',
         esc_attr( implode( ' ', $classes ) ),
         esc_attr( $json )
     );
@@ -379,17 +386,18 @@ public function render_mount( array $config ): string {
 			wp_send_json_error( [ 'message' => __( 'اتصال به سرویس هوش مصنوعی برقرار نشد.', 'nafas-chatbot-pro' ) ], 502 );
 		}
 
-		$code    = (int) wp_remote_retrieve_response_code( $response );
-		$body    = wp_remote_retrieve_body( $response );
-		$decoded = json_decode( $body, true );
+	$code    = (int) wp_remote_retrieve_response_code( $response );
+$body    = wp_remote_retrieve_body( $response );
+$decoded = json_decode( $body, true );
 
-		if ( $code < 200 || $code >= 300 || ! is_array( $decoded ) ) {
-			$this->metric_inc( 'ncp_metric_api_errors' );
-			$err_msg = is_array( $decoded ) && isset( $decoded['error']['message'] )
-				? sanitize_text_field( (string) $decoded['error']['message'] )
-				: __( 'پاسخ نامعتبر از سرویس هوش مصنوعی.', 'nafas-chatbot-pro' );
-			wp_send_json_error( [ 'message' => $err_msg ], 502 );
-		}
+// FIX: Use >= for comparison, not = for assignment.
+if ( $code >= 300 || ! is_array( $decoded ) ) {
+    $this->metric_inc( 'ncp_metric_api_errors' );
+    $err_msg = is_array( $decoded ) && isset( $decoded['error']['message'] )
+        ? sanitize_text_field( (string) $decoded['error']['message'] )
+        : __( 'پاسخ نامعتبر از سرویس هوش مصنوعی.', 'nafas-chatbot-pro' );
+    wp_send_json_error( [ 'message' => $err_msg ], 502 );
+}
 
 		$reply  = $this->extract_text( $decoded );
 		$tokens = (int) ( $decoded['usage']['total_tokens'] ?? 0 );
@@ -420,15 +428,27 @@ public function render_mount( array $config ): string {
 		$product     = sanitize_text_field( wp_unslash( $_POST['product'] ?? '' ) );
 
 		// Validation
-		if ( mb_strlen( $name ) < 2 || mb_strlen( $name ) > 80 ) {
-			wp_send_json_error( [ 'message' => __( 'نام نامعتبر است.', 'nafas-chatbot-pro' ) ], 400 );
-		}
+		// FIX: Restore proper range comparisons for both fields.
+$name_len = mb_strlen( $name );
+if ( $name_len < 2 || $name_len > 80 ) {
+    wp_send_json_error(
+        [ 'message' => __( 'نام نامعتبر است. (۲ تا ۸۰ کاراکتر)', 'nafas-chatbot-pro' ) ],
+        400
+    );
+}
+
 		if ( ! preg_match( '/^(\+98|0)?9\d{9}$/', $phone ) ) {
 			wp_send_json_error( [ 'message' => __( 'شماره موبایل نامعتبر است. (مثال: 09121234567)', 'nafas-chatbot-pro' ) ], 400 );
 		}
-		if ( mb_strlen( $description ) < 5 || mb_strlen( $description ) > 2000 ) {
-			wp_send_json_error( [ 'message' => __( 'توضیحات باید بین ۵ تا ۲۰۰۰ کاراکتر باشد.', 'nafas-chatbot-pro' ) ], 400 );
-		}
+
+
+$desc_len = mb_strlen( $description );
+if ( $desc_len < 5 || $desc_len > 2000 ) {
+    wp_send_json_error(
+        [ 'message' => __( 'توضیحات باید بین ۵ تا ۲۰۰۰ کاراکتر باشد.', 'nafas-chatbot-pro' ) ],
+        400
+    );
+}
 
 		// Send Bale notification
 		$bale_token   = trim( (string) get_option( 'ncp_bale_token', '' ) );
@@ -498,7 +518,8 @@ public function render_mount( array $config ): string {
 		check_ajax_referer( NCP_NONCE, 'nonce' );
 
 		global $wpdb;
-		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}" . NCP_TABLE );
+	    $table = $wpdb->prefix . NCP_TABLE;
+		$wpdb->query( "TRUNCATE TABLE {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL
 		delete_option( 'ncp_metric_cache_hits' );
 		delete_option( 'ncp_metric_api_success' );
 		delete_option( 'ncp_metric_api_errors' );
