@@ -2,91 +2,26 @@
 /**
  * Plugin Name:       Nafas Chatbot Pro
  * Plugin URI:        https://dbsgraphic.ir
- * Description:       Enterprise-grade AI chatbot for WordPress & Elementor. Multi-provider AI (AvalAI, OpenAI, custom), RTL/LTR, dark mode, persistent history, rate limiting, Bale/Telegram notifications, chat logging, and full shortcode + Elementor widget integration.
- * Version:           2.0.1
+ * Description:       Enterprise-grade AI chatbot for WordPress & Elementor. Multi-provider AI (AvalAI, OpenAI, Claude, Groq), Advanced Security, Rate Limiting, Real-time Streaming, Knowledge Base, Analytics, White-Label & SaaS Ready.
+ * Version:           3.0.0
  * Author:            Saeed Zarrini
  * Author URI:        https://dbsgraphic.ir
  * License:           GPL-2.0-or-later
  * Requires at least: 6.2
- * Requires PHP:      8.0
+ * Requires PHP:      8.1
  * Text Domain:       nafas-chatbot-pro
+ * Domain Path:       /languages
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NCP_VERSION', '2.0.1' );
-define( 'NCP_FILE', __FILE__ );
-define( 'NCP_DIR', plugin_dir_path( __FILE__ ) );
-define( 'NCP_URL', plugin_dir_url( __FILE__ ) );
-define( 'NCP_TABLE', 'ncp_chat_log' );
-define( 'NCP_NONCE', 'ncp_security_nonce' );
-define( 'NCP_OPT_GROUP', 'ncp_settings_group' );
-define( 'NCP_MENU_SLUG', 'ncp-dashboard' );
+// Load Constants
+require_once __DIR__ . '/includes/Core/Constants.php';
 
-final class Nafas_Chatbot_Pro {
-
-	private static ?self $instance = null;
-	private bool $frontend_globals_injected = false;
-
-	public static function instance(): self {
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-
-	private function __construct() {
-		register_activation_hook( NCP_FILE, [ $this, 'activate' ] );
-		register_deactivation_hook( NCP_FILE, [ $this, 'deactivate' ] );
-
-		add_action( 'plugins_loaded', [ $this, 'load_textdomain' ] );
-		add_action( 'init', [ $this, 'register_shortcodes' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'admin_assets' ] );
-		add_action( 'admin_menu', [ $this, 'register_admin_menu' ] );
-		add_action( 'admin_init', [ $this, 'register_settings' ] );
-		add_action( 'elementor/widgets/register', [ $this, 'register_elementor_widget' ] );
-
-		add_action( 'wp_ajax_ncp_chat', [ $this, 'ajax_ncp_chat' ] );
-		add_action( 'wp_ajax_nopriv_ncp_chat', [ $this, 'ajax_ncp_chat' ] );
-		add_action( 'wp_ajax_ncp_form_submit', [ $this, 'ajax_ncp_form_submit' ] );
-		add_action( 'wp_ajax_nopriv_ncp_form_submit', [ $this, 'ajax_ncp_form_submit' ] );
-
-		add_action( 'wp_ajax_ncp_export_log', [ $this, 'ajax_ncp_export_log' ] );
-		add_action( 'wp_ajax_ncp_clear_log', [ $this, 'ajax_ncp_clear_log' ] );
-		add_action( 'wp_ajax_ncp_apply_preset', [ $this, 'ajax_ncp_apply_preset' ] );
-	}
-
-	public function activate(): void {
-		global $wpdb;
-
-		$charset = $wpdb->get_charset_collate();
-		$table   = $wpdb->prefix . NCP_TABLE;
-
-		$sql = "CREATE TABLE {$table} (
-			id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-			session_id  VARCHAR(128)    NOT NULL DEFAULT '',
-			user_ip     VARCHAR(45)     NOT NULL DEFAULT '',
-			provider    VARCHAR(32)     NOT NULL DEFAULT '',
-			model       VARCHAR(100)    NOT NULL DEFAULT '',
-			message     TEXT            NOT NULL,
-			response    TEXT            NOT NULL,
-			tokens_used INT UNSIGNED    NOT NULL DEFAULT 0,
-			cached      TINYINT(1)      NOT NULL DEFAULT 0,
-			created_at  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			PRIMARY KEY (id),
-			INDEX idx_session (session_id),
-			INDEX idx_ip      (user_ip),
-			INDEX idx_created (created_at)
-		) {$charset};";
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql );
-
-		$defaults = [
-			'ncp_default_provider'     => 'avalai',
+// Load Bootstrap
+require_once NCP_INCLUDES_DIR . 'Core/Bootstrap.php';
 			'ncp_avalai_endpoint'      => 'https://api.avalai.ir/v1/chat/completions',
 			'ncp_openai_endpoint'      => 'https://api.openai.com/v1/chat/completions',
 			'ncp_custom_endpoint'      => '',
